@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords"
+    content="LRP, ResNet, Layer-wise Relevance Propagation, conservation axiom, conservation property">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layer-Wise Relevance Propagation with Conservation Property for ResNet</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <!-- added mathjax -->
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Layer-Wise Relevance Propagation with Conservation Property for
+              ResNet</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Under Review</span>
+              <!-- <span class="author-block">
+                <a href="https://foo">Seitaro Otsuki</a><sup>1</sup>,</span> -->
+              <!-- <span class="author-block">
+                <a href="https://foo">Tsumugi Iida</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://foo">Félix Doublet</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://foo">Tsubasa Hirakawa</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://foo">Takayoshi Yamashita</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://foo">Hironobu Fujiyoshi</a><sup>2</sup>,</span>
+              <span class="author-block">
+                <a href="https://foo">Komei Sugiura</a><sup>1</sup></span> -->
+            </div>
+
+            <!-- <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Keio University</span>
+              <span class="author-block"><sup>2</sup>Chubu University</span>
+            </div> -->
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <div class="button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </div>
+                  <!-- <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a> -->
+                </span>
+                <span class="link-block">
+                  <div class="button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Supplementary Material</span>
+                  </div>
+                  <!-- <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Supplementary Material</span>
+                  </a> -->
+                </span>
+                <span class="link-block">
+                  <div class="button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </div>
+                  <!-- <a href="https://arxiv.org/" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a> -->
+                </span>
+
+                <!-- Video Link. -->
+                <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+                </span> -->
+
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <div class="button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </div>
+                  <!-- <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a> -->
+                </span>
+
+                <!-- Dataset Link. -->
+                <!-- <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a> -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+  <!-- 
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/steve.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/chair-tp.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/shiba.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/fullbody.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/mask.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/coffee.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/toby2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Transparent formulation of explanation methods is essential for elucidating the predictions of neural
+              network models, which are commonly of a black-box nature. Layer-wise Relevance Propagation (LRP) stands
+              out as a well-established method that transparently traces the flow of a model’s prediction backward
+              through its architecture by backpropagating relevance scores.
+              However, LRP has not fully considered the existence of a skip connection, and its application to the
+              widely used ResNet architecture has not been thoroughly explored.
+            </p>
+            <p>
+              In this study, we extend LRP to the ResNet models by introducing relevance splitting at a point where
+              outputs from a skip connection and a residual block converge. Moreover, our formulation guarantees the
+              conservation property throughout the process, thereby preserving the integrity of the generated
+              explanations.
+            </p>
+            <p>
+              To evaluate the effectiveness of our approach, we conduct the experiments on ImageNet and the Caltech-UCSD
+              Birds-200-2011 dataset.
+              Our method demonstrated superior performance compared to baseline methods on standard evaluation metrics
+              such as Insertion-Deletion score while maintaining its conservation property.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+
+      <!-- Eye catch figure -->
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <!-- <figure class="image is-16by9"> -->
+          <figure class="image">
+            <img src="./static/images/eye-catch-v2.2.png" alt="Eye catch figure." />
+          </figure>
+          <!-- caption below the figure -->
+          <div class="content has-text-justified">
+            <p class="content has-text-justified">
+              <b>Fig. 1:</b> We propose LRP for ResNet.
+              By formulating Relevance Splitting at a point where the output from a skip connection converges with that
+              from a residual block,
+              we extend LRP---originally designed for propagating relevance between two consecutive layers---to the
+              ResNet architecture while guaranteeing its conservation property,
+              thereby preserving the integrity of the explanation process.
+            </p>
+          </div>
+
+          <!-- Paper video. -->
+          <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+          <!--/ Paper video. -->
+
+        </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- <div class="columns is-centered"> -->
+
+      <!-- Visual Effects. -->
+      <!-- <div class="column">
+        <div class="content">
+          <h2 class="title is-3">Visual Effects</h2>
+          <p>
+            Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
+            would be impossible without nerfies since it would require going through a wall.
+          </p>
+          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/dollyzoom-stacked.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div> -->
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <!-- <div class="column">
+        <h2 class="title is-3">Matting</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <p>
+              As a byproduct of our method, we can also solve the matting problem by ignoring
+              samples that fall outside of a bounding box during rendering.
+            </p>
+            <video id="matting-video" controls playsinline height="100%">
+              <source src="./static/videos/matting.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+
+        </div>
+      </div>
+    </div> -->
+      <!--/ Matting. -->
+
+      <!-- overview -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Overview</h2>
+          <figure class="image">
+            <img src="./static/images/framework.png" alt="." />
+          </figure>
+          <p class="content has-text-justified">
+            <b>Fig. 2:</b> LRP for ResNet. <b>Top:</b> LRP propagates the relevance score backward to generate an
+            attribution map corresponding to the input image.
+            We focus on the relevance score propagation through the Bottleneck module, which incorporates a residual
+            connection. <b>Bottom:</b> Architecture of the Bottleneck module.
+            The D-Bottleneck employs a linear projection, implemented by a 1 \( \times \) 1 convolution, in its skip
+            connection for dimension matching.
+            ReLU activation functions and batch normalization layers are omitted for simplicity.
+          </p>
+        </div>
+      </div>
+      <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <figure class="image">
+          <img src="./static/images/relevance-v2.png" alt="."/>
+        </figure>
+        <p class="content has-text-justified">
+          <b>Fig. 3:</b> Architecture of the Bottleneck block in ResNet and our Relevance Splitting approach.
+          We introduce Relevance Splitting to consider the existence of skip connections in the relevance propagation of LRP.
+          We formulate two splitting approaches and discuss their application to two distinct types of skip connections.
+        </p>
+      </div>
+    </div> -->
+
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-4 has-text-justified">Relevance Splitting</h2>
+          <p class="content has-text-justified">
+            LRP originally defines a propagation rule between two consecutive layers. However, this rule does not
+            account for the existence of a skip connection that bridges nonconsecutive layers.
+            <br>
+            <b>How should we propagate the relevance scores at the point where the output of the skip connection
+              converges with that of the residual block?</b>
+            <br>\( \downarrow \)<br>
+            <b>We propose Relevance Splitting to address this issue.</b>
+          </p>
+          <p class="content has-text-justified">
+            As a preliminary step, we first divide the relevance score \( \boldsymbol R^{(l+1)} \) into two parts: \(
+            \boldsymbol R_s \) for propagation through the skip connection and \( \boldsymbol R_m \) for the mainstream
+            of the residual block. In this context, \( s \) in \( \boldsymbol R_s \) signifies the skip connection, and
+            \( m \) in \( \boldsymbol R_m \) denotes the mainstream of the residual block. To adhere to the conservation
+            property, we impose the following constraint:
+            \[ \boldsymbol R^{(l)} = \boldsymbol R^{(l+1)} = \boldsymbol R_s + \boldsymbol R_m. \]
+          </p>
+          <figure class="image">
+            <img src="./static/images/relevance-v2.png" alt="." />
+          </figure>
+          <p class="content has-text-justified">
+            <b>Fig. 3:</b> Architecture of the Bottleneck block in ResNet and our Relevance Splitting approach.
+            We introduce Relevance Splitting to consider the existence of skip connections in the relevance propagation
+            of LRP.
+            We formulate two splitting approaches and discuss their application to two distinct types of skip
+            connections.
+          </p>
+          <p>
+            <br>
+            <b>We formulate following two splitting approaches.</b>
+            <br>
+            <br>
+          </p>
+          <br>
+          <h3 class="title is-5 has-text-justified">Symmetric Splitting</h3>
+          <p class="content has-text-justified">
+            Symmetric Splitting divides \( \boldsymbol R^{(l+1)} \) equally as follows:
+            \[ (R_s)_i = (R_m)_i = \frac{R^{(l+1)}_i}{2}. \]
+          </p>
+          <h3 class="title is-5 has-text-justified">Ratio-Based Splitting</h3>
+          <p class="content has-text-justified">
+            Ratio-Based Splitting is a more thorough approach.
+            Let \( \boldsymbol h_s \) and \( \boldsymbol h_m \) represent the outputs of the skip connection and the
+            residual block, respectively.
+            We divide \( \boldsymbol R^{(l+1)} \) to satisfy the following conditions:
+            \[ (R_s)_i = \frac{R^{(l+1)}_i \cdot |(h_s)_i|}{|(h_m)_i| + |(h_s)_i|},\quad (R_m)_i = \frac{R^{(l+1)}_i
+            \cdot |(h_m)_i|}{|(h_m)_i| + |(h_s)_i|}. \]
+          </p>
+        </div>
+      </div>
+      <!--/ overview -->
+
+      <!-- results & analysis -->
+      <br>
+      <br>
+      <br>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Results & Empirical Analysis</h2>
+          <p class="content has-text-justified">
+            We conduct experiments on ImageNet and the Caltech-UCSD Birds-200-2011 dataset to evaluate the effectiveness
+            of our approach.
+          </p>
+          <br>
+
+          <h3 class="title is-4 has-text-justified">Qualitative Results</h3>
+          <figure class="image">
+            <img src="./static/images/qualitative.png" alt="." />
+          </figure>
+          <p class="content has-text-justified">
+            <b>Fig. 4:</b> Qualitative Results: Attribution produced by each explanation method for the prediction of
+            ResNet50 with respect to the ground-truth classes (top to bottom): "Brandt Cormorant", "Savannah Sparrow",
+            "Sock", "Bustard", and "Bee."
+          </p>
+          <br>
+
+          <h3 class="title is-4 has-text-justified">Quantitative Results</h3>
+          <p class="content has-text-justified">
+            <b>Table 1:</b> Quantitative results on ImageNet and the CUB dataset. IG and Guided BP denote Integrated
+            Gradients and Guided BackPropagation, respectively. Ins. and Del. denote Insertion and Deletion score,
+            respectively. The best results are marked in bold.
+          </p>
+          <figure class="image">
+            <img src="./static/images/tab-quantitative.png" alt="." />
+          </figure>
+          <br>
+          <br>
+
+          <h3 class="title is-4 has-text-justified">Empirical Analysis of Conservation Property</h3>
+          <figure class="image">
+            <img src="./static/images/conservation.png" alt="." />
+          </figure>
+          <p class="content has-text-justified">
+            <b>Fig. 5:</b> Visualization of the sum of relevance scores backpropagated to four critical points within
+            ResNet50:
+            (a) input of the entire network, (b) input of the first Bottleneck block, and (c) input of the last
+            Bottleneck block.
+            Each point in the scatter plots corresponds to the sum of the relevance scores plotted against the model's
+            output for one sample.
+            Points closer to the diagonal line indicate a higher adherence to the conservation property.
+          </p>
+          <br>
+          <br>
+
+          <h3 class="title is-4 has-text-justified">Ablation Study of Relevance Propagation Rules for Bottleneck Modules
+          </h3>
+          <p class="content has-text-justified">
+            <b>Table 2:</b> Comparison of propagation rules for the Bottleneck modules. "Include Identical" denotes the
+            condition in which the relevance score for skip connections with identity mapping is not set to 0.
+            Insertion, Deletion and ID scores were calculated on ImageNet. The highest scores are marked in bold.
+          </p>
+          <figure class="image">
+            <img src="./static/images/tab-ablation.png" alt="." />
+          </figure>
+          <br>
+          <br>
+
+          <figure class="image">
+            <img src="./static/images/ablation.png" alt="." />
+          </figure>
+          <p class="content has-text-justified">
+            <b>Fig. 6:</b> Visualization of the sum of relevance scores backpropagated to four critical points within
+            ResNet50:
+            (a) input of the entire network, (b) input of the first Bottleneck block, and (c) input of the last
+            Bottleneck block.
+            Each point in the scatter plots corresponds to the sum of the relevance scores plotted against the model's
+            output for one sample.
+            Points closer to the diagonal line indicate a higher adherence to the conservation property.
+          </p>
+          <br>
+          <br>
+
+        </div>
+      </div>
+      <!--/ results & analysis -->
+
+    </div>
+  </section>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+    To be appeared.
+    <!-- @inproceedings{park2021nerfies,
+      author    = {},
+      title     = {Layer-Wise Relevance Propagation with Conservation Property for ResNet},
+      journal   = {ECCV},
+      year      = {2024},
+    } -->
+    </code></pre>
+    </div>
+  </section>
+  <svg class="w-full h-32 scale-y-[-1]" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+    <defs>
+      <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+    </defs>
+    <g class="parallax svelte-2cm2hv">
+      <use xlink:href="#gentle-wave" x="40" y="3" fill="rgba(130, 130, 130, 0.5)" class="svelte-2cm2hv"></use>
+      <use xlink:href="#gentle-wave" x="32" y="0" fill="rgba(130, 130, 130, 0.6)" class="svelte-2cm2hv"></use>
+      <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(130, 130, 130, 0.8)" class="svelte-2cm2hv"></use>
+      <use xlink:href="#gentle-wave" x="50" y="5" fill="rgba(40, 40, 40, 0.2)" class="svelte-2cm2hv"></use>
+    </g>
+  </svg>
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              Website template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> licensed
+              under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+            <!-- <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
