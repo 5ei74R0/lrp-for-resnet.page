@@ -65,7 +65,7 @@
                     <span class="icon">
                       <i class="fas fa-file-pdf"></i>
                     </span>
-                    <span>Paper</span>
+                    <span><s>Paper</s></span>
                   </div>
                   <!-- <a href="" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
@@ -79,13 +79,13 @@
                     <span class="icon">
                       <i class="fas fa-file-pdf"></i>
                     </span>
-                    <span>Supplementary Material</span>
+                    <span><s>Supp.</s></span>
                   </div>
                   <!-- <a href="" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
                       <i class="fas fa-file-pdf"></i>
                     </span>
-                    <span>Supplementary Material</span>
+                    <span>Supp.</span>
                   </a> -->
                 </span>
                 <span class="link-block">
@@ -93,7 +93,7 @@
                     <span class="icon">
                       <i class="ai ai-arxiv"></i>
                     </span>
-                    <span>arXiv</span>
+                    <span><s>arXiv</s></span>
                   </div>
                   <!-- <a href="https://arxiv.org/" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
@@ -120,7 +120,7 @@
                     <span class="icon">
                       <i class="fab fa-github"></i>
                     </span>
-                    <span>Code</span>
+                    <span><s>Code</s></span>
                   </div>
                   <!-- <a href="" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
@@ -131,8 +131,12 @@
                 </span>
 
               </div>
-
             </div>
+            <p>
+              Currently, the paper is under review. We will set the links as soon as the paper is published.
+              <br>
+              <b>At this moment, our code and additional report are provided as supplementary materials.</b>
+            </p>
           </div>
         </div>
       </div>
@@ -151,12 +155,12 @@
               network models, which are commonly of a black-box nature. Layer-wise Relevance Propagation (LRP) stands
               out as a well-established method that transparently traces the flow of a model’s prediction backward
               through its architecture by backpropagating relevance scores.
-              However, LRP has not fully considered the existence of a skip connection, and its application to the
+              However, <b>LRP has not fully considered the existence of a skip connection</b>, and its application to the
               widely used ResNet architecture has not been thoroughly explored.
             </p>
             <p>
-              In this study, we extend LRP to the ResNet models by introducing relevance splitting at a point where
-              outputs from a skip connection and a residual block converge. Moreover, our formulation guarantees the
+              In this study, we <b>extend LRP to the ResNet models by introducing relevance splitting at a point where
+              outputs from a skip connection and a residual block converge</b>. Moreover, our formulation guarantees the
               conservation property throughout the process, thereby preserving the integrity of the generated
               explanations.
             </p>
@@ -340,13 +344,9 @@
             <img src="./static/images/ablation.png" alt="." />
           </figure>
           <p class="content has-text-justified">
-            <b>Fig. 6:</b> Visualization of the sum of relevance scores backpropagated to four critical points within
-            ResNet50:
-            (a) input of the entire network, (b) input of the first Bottleneck block, and (c) input of the last
-            Bottleneck block.
-            Each point in the scatter plots corresponds to the sum of the relevance scores plotted against the model's
-            output for one sample.
-            Points closer to the diagonal line indicate a higher adherence to the conservation property.
+            <b>Fig. 6:</b> Qualitative results from the ablation study of propagation rules for the Bottleneck modules.
+            Methods (i) and (iv) refer to the methods described in Table 2.
+            Method (iv) exhibits a more concentrated attribution towards relevant objects than Method (i).
           </p>
           <br>
           <br>
